@@ -4,7 +4,7 @@
 #include <raymath.h>
 #include "constants.hpp"
 
-player::player(): move_speed(200.0f){
+player::player(): move_speed(200.0f), size(Vector2{25,120}),position(Vector2{30,200}){
     fmt::println("{} , {} start position", this->position.x, this->position.y);
 }
 void player::set_position(Vector2 pos){

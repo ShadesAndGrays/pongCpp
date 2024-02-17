@@ -1,3 +1,4 @@
+#include "ai.hpp"
 #include "player.hpp"
 #include "ball.hpp"
 #include "pong.hpp"
@@ -9,10 +10,11 @@
 
 player *ptr_player = nullptr;
 ball *ptr_ball = nullptr;
-
+ai * ptr_ai = nullptr;
 void ready(){
     ptr_player = new player; 
     ptr_ball = new ball;
+    ptr_ai = new ai(ptr_ball); 
     ptr_ball->set_positon(Vector2{WIDTH/2.0f,HEIGHT/2.0f});
 }
 void process(float delta){
@@ -26,6 +28,8 @@ void draw(){
         ptr_player->draw();
     if(ptr_ball != nullptr)
         ptr_ball->draw();
+    if (ptr_!= nullptr)
+        ptr_player->draw();
 }
 void cleanup(){
     delete ptr_player;

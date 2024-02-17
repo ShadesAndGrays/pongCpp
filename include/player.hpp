@@ -3,9 +3,9 @@
 #include <raymath.h>
 class player{
 
-    private: 
-        Vector2 position = Vector2{30,200}; 
-        Vector2 size = Vector2{25,120}; 
+    protected: 
+        Vector2 position ; 
+        Vector2 size ; 
         float move_speed;
     public:
         player();

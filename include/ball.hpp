@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 class ball{
-    private:
+    protected:
         float speed;
         Vector2 position; 
         float size;
@@ -15,6 +15,7 @@ class ball{
         void set_positon(Vector2 pos);
         void process(float delta);
         bool is_colliding();
+        bool is_on_ceiling_or_floor();
         Vector2 check_collision();
         void draw();
 
