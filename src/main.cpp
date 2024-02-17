@@ -7,11 +7,15 @@
 #include <raymath.h>
 #include <string>
 #include "constants.hpp"
+#include "sound_manager.hpp"
+
 
 player *ptr_player = nullptr;
 ball *ptr_ball = nullptr;
 ai * ptr_ai = nullptr;
+
 void ready(){
+    sound_manager::get_sound_manager_instance();
     ptr_player = new player; 
     ptr_ball = new ball;
     ptr_ai = new ai(ptr_ball); 
@@ -22,14 +26,16 @@ void process(float delta){
         ptr_player->process(delta);
     if (ptr_ball != nullptr)
         ptr_ball->process(delta);
+    if (ptr_ai != nullptr)
+        ptr_ai->process(delta);
 }
 void draw(){
     if (ptr_player != nullptr)
         ptr_player->draw();
     if(ptr_ball != nullptr)
         ptr_ball->draw();
-    if (ptr_!= nullptr)
-        ptr_player->draw();
+    if (ptr_ai!= nullptr)
+        ptr_ai->draw();
 }
 void cleanup(){
     delete ptr_player;

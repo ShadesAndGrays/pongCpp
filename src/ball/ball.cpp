@@ -1,10 +1,13 @@
 #include "ball.hpp"
+#include "ai.hpp"
 #include "player.hpp"
 #include <fmt/core.h>
 #include <raylib.h>
 #include "constants.hpp" 
+#include "sound_manager.hpp"
 extern player * ptr_player; 
-ball::ball() : speed(200.0) ,size(10.0f),position({0,0}), velocity(Vector2{-50,80}){
+extern ai * ptr_ai;
+ball::ball() : speed(180.0) ,size(10.0f),position({0,0}), velocity(Vector2{-1.2,0.8}){
 
     
 }
@@ -17,12 +20,16 @@ void ball::set_positon(Vector2 pos){
     position = pos;
 
 }
+
+Vector2 ball::get_position(){
+    return position;
+}
 void ball::move(float delta){
     velocity = check_collision();
-    position.x += velocity.x *delta; 
-    position.y += velocity.y * delta; 
+    position.x += velocity.x * speed * delta; 
+    position.y += velocity.y * speed * delta; 
 }
-bool ball::is_colliding(){
+bool ball::is_colliding(player* ptr_player){
 
     Vector2 player_position = ptr_player->get_position();
     Vector2 current_postion = position;
@@ -48,11 +55,13 @@ bool ball::is_on_ceiling_or_floor(){
 Vector2 ball::check_collision(){
 
     Vector2 collision_vector = velocity;
-    if(is_colliding()){
+    if(is_colliding(ptr_player) || is_colliding(ptr_ai)){
         collision_vector.x = -collision_vector.x; 
+        sound_manager::get_sound_manager_instance()->play_sound(soundfx::BLIP1);
     }
     if(is_on_ceiling_or_floor()){
         collision_vector.y = -collision_vector.y;
+        sound_manager::get_sound_manager_instance()->play_sound(soundfx::BLIP1);
 }
     return collision_vector;
 }
