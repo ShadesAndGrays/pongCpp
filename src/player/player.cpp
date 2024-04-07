@@ -48,5 +48,13 @@ bool player::in_bound(){
     return true; 
 }
 Vector2 player::get_size(){
-    return size;
+    return this->size;
+}
+
+float player::get_move_speed(){
+    return  this->move_speed;
+}
+void player::set_move_speed(float speed){
+    this->move_speed = speed;
+
 }

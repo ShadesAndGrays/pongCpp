@@ -7,7 +7,7 @@
 #include <raymath.h>
 
 ai::ai(ball *bl): ptr_ball(bl) {
-    move_speed = 220.0f;
+    move_speed = 300.0f;
     position = Vector2{WIDTH-30, 300};
     size = Vector2{25,120};
     randDir = 0;
@@ -29,7 +29,7 @@ void ai::process(float delta) {
         }
         else{
 
-            position.y = Lerp(position.y,position.y + randDir , delta * move_speed * 0.7);
+            position.y = Lerp(position.y,position.y + randDir , delta * move_speed * 0.5);
         }
 
 

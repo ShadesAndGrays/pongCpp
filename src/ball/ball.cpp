@@ -15,7 +15,7 @@ ball::ball() :
     speed(300.0f) ,
     size(10.0f),
     position({0,0}), 
-    velocity(Vector2{-1.2,0.4}),
+    velocity(Vector2{1.2,0.4}),
     ball_state(OUT::NONE){
 
     }
@@ -110,4 +110,10 @@ void ball::randomizeVelocity(){
     velocity.x *= rand() % 10 -5 > 0 ? -1 : 1;
     velocity.y *= rand() % 10 -7 > 0 ? -1 : 1;
 
+}
+void ball::set_speed(float speed){
+    this->speed = speed;
+}
+float ball::get_speed(){
+    return this->speed;
 }

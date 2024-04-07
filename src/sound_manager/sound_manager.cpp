@@ -8,6 +8,8 @@ sound_manager *sound_manager::sound_manager_instance = nullptr;
 sound_manager::sound_manager(){
     InitAudioDevice();
     load_sound(soundfx::BLIP1, "sounds/pickupCoin.wav");
+    load_sound(soundfx::GOAL,"sounds/goal.wav");
+
 }
 sound_manager::~sound_manager(){
 for (sound_item i: sound_list){

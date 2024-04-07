@@ -24,7 +24,7 @@ void ready(){
     ptr_ball = new ball;
     ptr_ai = new ai(ptr_ball); 
     ptr_ball->set_positon(Vector2{WIDTH/2.0f,HEIGHT/2.0f});
-    
+
 }
 void process(float delta){
 
@@ -35,14 +35,21 @@ void process(float delta){
     if (ptr_ai != nullptr)
         ptr_ai->process(delta);
 }
+
+float check_score(){
+    float score = player_score.getScore() - ai_score.getScore();
+    score/=52.0f;
+    score = Clamp(score, -1.0, 1.0);
+    return score;
+
+}
 void draw(){
-    
-    std::string score_text = std::to_string(player_score.getScore()) +" : "+ std::to_string(ai_score.getScore());
-    DrawTextEx(font, score_text.c_str(), Vector2{ WIDTH * 0.47, HEIGHT * 0.1}, 32, 0,Color{255,255,255,100});
-    if (ptr_player != nullptr)
-        ptr_player->draw();
+
+
     if(ptr_ball != nullptr)
         ptr_ball->draw();
+    if (ptr_player != nullptr)
+        ptr_player->draw();
     if (ptr_ai!= nullptr)
         ptr_ai->draw();
 }
@@ -61,21 +68,25 @@ int main(){
     camera.offset = (Vector2){ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
-    
-    SetTargetFPS(60);
 
-float scale = std::min((float)GetScreenWidth()/WIDTH, (float)GetScreenHeight()/HEIGHT);
+    SetTargetFPS(60);
+    int level = 30;
+
+    float scale = std::min((float)GetScreenWidth()/WIDTH, (float)GetScreenHeight()/HEIGHT);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     RenderTexture screen = LoadRenderTexture(WIDTH,HEIGHT);
     SetTextureFilter(screen.texture, TEXTURE_FILTER_BILINEAR); 
+    RenderTexture scoreScreen = LoadRenderTexture(WIDTH, HEIGHT * 0.1f);
+    // SetTextureFilter(scoreScreen.texture, TEXTURE_FILTER_BILINEAR); 
+
     ready();
-    
+
     while (!WindowShouldClose())
     {
         process(GetTime() - prev_time);
         prev_time = GetTime();
-        
-        
+
+
         if(IsKeyPressed(KEY_SPACE))
         {
             cleanup();
@@ -89,41 +100,79 @@ float scale = std::min((float)GetScreenWidth()/WIDTH, (float)GetScreenHeight()/H
 
             ptr_ball->set_positon(Vector2{WIDTH/2.0f,HEIGHT/2.0f});
             ptr_ball->randomizeVelocity();
+            ptr_ball->set_speed(ptr_ball->get_speed() + level/3.0f);
+            sound_manager::get_sound_manager_instance()->play_sound(soundfx::GOAL);
             switch (ptr_ball->out_of_bounds()) {
                 case LEFT:
-                    player_score.increment();
+                    ai_score.increment();
+                    ptr_player->set_move_speed(ptr_player->get_move_speed() + level/6.0f);
                     break;
                 case RIGHT:
-                    ai_score.increment();
+                    player_score.increment();
+                    ptr_ai->set_move_speed(ptr_ai->get_move_speed() + level/2.0f); 
+                    ptr_ball->set_speed(ptr_ball->get_speed() + level/2.5f);
                     break;
                 default:
                     break;
-
-
             }
+            if (level > 6){
+                level-=0.5;
+            }
+
 
         }
 
+        /* if (IsKeyDown(KEY_A)){
+            player_score.increment();
+        }
+        else if(IsKeyDown(KEY_D)){
+            ai_score.increment();
+        } */
 
-        auto rect_bg = calculateScale(screen); 
+        auto  rect_bg = calculateScale(screen); 
+        auto scorebg = rect_bg; 
+
         rect_bg.width += 2;
         rect_bg.height += 2;
         rect_bg.x -=1;
         rect_bg.y -=1;
+
+        scorebg.y = 2;
+        scorebg.height = scoreScreen.texture.height; 
 
         BeginTextureMode(screen);
         ClearBackground(BLACK);
         draw();
         EndTextureMode();
 
+        BeginTextureMode(scoreScreen);
+        ClearBackground(BLACK);
+        std::string score_text = std::to_string(player_score.getScore()) +" : "+ std::to_string(ai_score.getScore());
+        DrawTextEx(font, score_text.c_str(), Vector2{ WIDTH * 0.45, HEIGHT * 0.01}, 32, 0,Color{255,255,255,140});
+
+        DrawRectangleV(Vector2{WIDTH * 0.1, HEIGHT * 0.07},Vector2{WIDTH * 0.8f, HEIGHT * 0.01f}, Color{255,200,255,150});
+        DrawRectangleV(Vector2{WIDTH * 0.1, HEIGHT * 0.07},Vector2{WIDTH * 0.4f - (WIDTH * 0.4f) * check_score(),HEIGHT * 0.01f}, Color{200,255,255,150});
+
+        EndTextureMode();
+
         BeginDrawing();
         BeginMode2D(camera);
         ClearBackground(BLACK);
+
         DrawRectangleRec(rect_bg, WHITE);
+        
+        DrawRectangleV({scorebg.x - 1 ,scorebg.y - 1},{scorebg.width +2, scorebg.height +2},WHITE);
+
         DrawTexturePro(
                 screen.texture,
                 (Rectangle){ 0.0f, 0.0f, (float)screen.texture.width, (float)-screen.texture.height },
                 calculateScale(screen), (Vector2){ 0, 0 }, 0.0f, WHITE);   
+
+        DrawTexturePro(
+                scoreScreen.texture, 
+                (Rectangle){ 0.0f, 0.0f, (float)scoreScreen.texture.width, (float)-scoreScreen.texture.height },
+                scorebg, {0}, 0,WHITE);
+
         EndMode2D();
         EndDrawing();
     }

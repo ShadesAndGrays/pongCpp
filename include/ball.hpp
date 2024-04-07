@@ -24,6 +24,8 @@ class ball{
         ball();
         Vector2 get_position();
         void set_positon(Vector2 pos);
+        void set_speed(float speed);
+        float get_speed();
         void randomizeVelocity();
         void process(float delta);
         bool is_colliding(player * ptr_player);

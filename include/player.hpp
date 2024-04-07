@@ -15,4 +15,7 @@ class player{
         Vector2 get_position();
         virtual void process(float delta);
         void draw();
+        void set_move_speed(float speed);
+        float get_move_speed();
 };
+
