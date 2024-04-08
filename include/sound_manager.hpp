@@ -19,7 +19,9 @@ class sound{
 enum class soundfx{
     BLIP1,
     BLIP2,
-    GOAL
+    GOAL,
+    GOOD_END,
+    BAD_END
 };
 
 class sound_manager{

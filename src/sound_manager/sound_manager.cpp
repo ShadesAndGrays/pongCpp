@@ -1,5 +1,6 @@
 #include "sound_manager.hpp"
 #include <map>
+
 #include <raylib.h>
 #include <string>
 
@@ -9,6 +10,9 @@ sound_manager::sound_manager(){
     InitAudioDevice();
     load_sound(soundfx::BLIP1, "sounds/pickupCoin.wav");
     load_sound(soundfx::GOAL,"sounds/goal.wav");
+    load_sound(soundfx::GOAL,"sounds/goal.wav");
+    load_sound(soundfx::GOOD_END,"sounds/goodEnding.wav");
+    load_sound(soundfx::BAD_END,"sounds/badEnding.wav");
 
 }
 sound_manager::~sound_manager(){
